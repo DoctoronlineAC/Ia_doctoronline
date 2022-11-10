@@ -1,0 +1,7 @@
+uvicorn main:app --reload
+docker build -t simple_app .
+docker images
+docker run -it -p 8000:8000 -d app_despliegue
+docker ps
+docker start -a contenedor
+
