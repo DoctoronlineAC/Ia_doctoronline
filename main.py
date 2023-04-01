@@ -69,25 +69,64 @@ async def root(item: Item):
         lists = prediccion.tolist()
         prediccion2= clf2.predict(lists)
         lists2 = prediccion2.tolist()
+        class MiClase:
+          def __init__(self, cups_solicitud, descripcion,cantidad,tipo):
+            self.cups_solicitud = cups_solicitud
+            self.descripcion = descripcion
+            self.cantidad= cantidad
+            self.tipo= tipo
+
+        class MiClase2:
+          def __init__(self, codigo_medicamento, descripcion_medicamento,cantidad_medicamento,prescripcion_medicamento):
+            self.codigo_medicamento = codigo_medicamento
+            self.descripcion_medicamento = descripcion_medicamento
+            self.cantidad_medicamento= cantidad_medicamento
+            self.prescripcion_medicamento= prescripcion_medicamento
+
+        mi_diccionario = {
+           "cups_solictud":tablas_enc['cups_solictud'].inverse_transform([[prediccion[0][0]]])[0][0].replace('-0.0','').split('-')[1:],
+           "descripcion" :tablas_enc['descripcion'].inverse_transform([[prediccion[0][1]]])[0][0].replace('-0.0','').split('-')[1:],
+           "cantidad":tablas_enc['cantidad'].inverse_transform([[prediccion[0][2]]])[0][0].replace('-0.0','').split('-')[1:],
+           "tipo": tablas_enc['tipo'].inverse_transform([[prediccion[0][4]]])[0][0].replace('-0.0','').split('-')[1:],
+        }
+
+        mi_diccionario2 = {
+           "codigo_medicamento":tablas_enc['codigo_medicamento'].inverse_transform([[prediccion2[0][0]]])[0][0].replace('-0.0','').split('-')[1:],
+           "cantidad_medicamento":tablas_enc['cantidad_medicamento'].inverse_transform([[prediccion2[0][2]]])[0][0].replace('-0.0','').split('-')[1:],
+           "descripcion_medicamento":tablas_enc['descripcion_medicamento'].inverse_transform([[prediccion2[0][1]]])[0][0].replace('-0.0','').split('-')[1:],
+           "prescripcion_medicamento":tablas_enc['prescripcion_medicamento'].inverse_transform([[prediccion2[0][3]]])[0][0].replace('-0.0','').split('-')[1:],
+        }
+
+        solicitudes=[]
+        medicamentos=[]
+
+        dist=len(mi_diccionario['cups_solictud']),len(mi_diccionario['descripcion']),len(mi_diccionario['cantidad']),len(mi_diccionario['tipo'])
+        dist2=len(mi_diccionario2['codigo_medicamento']),len(mi_diccionario2['descripcion_medicamento']),len(mi_diccionario2['cantidad_medicamento']),len(mi_diccionario2['prescripcion_medicamento'])
+
+        for i in range(min(dist)):
+          cups_solicitud = mi_diccionario['cups_solictud'][i]
+          descripcion = mi_diccionario['descripcion'][i]
+          cantidad = mi_diccionario['cantidad'][i]
+          tipo = mi_diccionario['tipo'][i]
+          solicitudes.append(MiClase(cups_solicitud, descripcion,cantidad,tipo))
+
+        for j in range(min(dist2)):
+          codigo_medicamento = mi_diccionario2['codigo_medicamento'][j]
+          descripcion_medicamento = mi_diccionario2['descripcion_medicamento'][j]
+          cantidad_medicamento = mi_diccionario2['cantidad_medicamento'][j]
+          prescripcion_medicamento = mi_diccionario2['prescripcion_medicamento'][j]
+          medicamentos.append(MiClase2(codigo_medicamento, descripcion_medicamento,cantidad_medicamento,prescripcion_medicamento))
         respuesta3=0
         respuesta3={
-            "cups_solictud":tablas_enc['cups_solictud'].inverse_transform([[prediccion[0][0]]])[0][0].replace('-0.0',''),
+            "clase_solicitudes": solicitudes,
+            "clase_medicamentos": medicamentos,
             "cups_solicitud_probabilidad":max(clf1.predict_proba([dato_en])[0][0]),
-            "descripcion" :tablas_enc['descripcion'].inverse_transform([[prediccion[0][1]]])[0][0].replace('-0.0',''),
             "descripcion_probabilidad":max(clf1.predict_proba([dato_en])[1][0]),
-            "cantidad":tablas_enc['cantidad'].inverse_transform([[prediccion[0][2]]])[0][0].replace('-0.0',''),
             "cantidad_probabilidad":max(clf1.predict_proba([dato_en])[2][0]),
-            "prescripcion": tablas_enc['prescripcion'].inverse_transform([[prediccion[0][3]]])[0][0][0][0].replace('-0.0',''),
-            "prescripcion_probabilidad":max(clf1.predict_proba([dato_en])[3][0]),
-            "tipo": tablas_enc['tipo'].inverse_transform([[prediccion[0][4]]])[0][0].replace('-0.0',''),
             "tipo_probabilidad":max(clf1.predict_proba([dato_en])[4][0]),
-            "codigo_medicamento":tablas_enc['codigo_medicamento'].inverse_transform([[prediccion2[0][0]]])[0][0].replace('-0.0',''),
             "codigo_medicamento_probabilidad":max(clf2.predict_proba(lists)[0][0]),
-            "descripcion_medicamento":tablas_enc['descripcion_medicamento'].inverse_transform([[prediccion2[0][1]]])[0][0].replace('-0.0',''),
             "descripcion_medicamento_probabilidad":max(clf2.predict_proba(lists)[1][0]),
-            "cantidad_medicamento":tablas_enc['cantidad_medicamento'].inverse_transform([[prediccion2[0][2]]])[0][0].replace('-0.0',''),
             "cantidad_medicamento_probabilidad":max(clf2.predict_proba(lists)[2][0]),
-            "prescripcion_medicamento":tablas_enc['prescripcion_medicamento'].inverse_transform([[prediccion2[0][3]]])[0][0].replace('-0.0',''),
             "prescripcion_medicamento_probabilidad":max(clf2.predict_proba(lists)[3][0]),
             #"presentacion":tablas_enc['presentacion'].inverse_transform([[prediccion2[0][4]]])[0][0]
             }
@@ -113,25 +152,64 @@ async def root(item: Item):
         lists = prediccion.tolist()
         prediccion2= clf22.predict(lists)
         lists2 = prediccion2.tolist()
+        class MiClase:
+           def __init__(self, cups_solicitud, descripcion,cantidad,tipo):
+              self.cups_solicitud = cups_solicitud
+              self.descripcion = descripcion
+              self.cantidad= cantidad
+              self.tipo= tipo
+
+        class MiClase2:
+            def __init__(self, codigo_medicamento, descripcion_medicamento,cantidad_medicamento,prescripcion_medicamento):
+              self.codigo_medicamento = codigo_medicamento
+              self.descripcion_medicamento = descripcion_medicamento
+              self.cantidad_medicamento= cantidad_medicamento
+              self.prescripcion_medicamento= prescripcion_medicamento
+
+        mi_diccionario = {
+           'cups_solictud': tablas_enc2['cups_codigo'].inverse_transform([[prediccion[0][0]]])[0][0].replace('-0.0','').split('-')[1:],
+           "descripcion" :tablas_enc2['descripcion'].inverse_transform([[prediccion[0][1]]])[0][0].replace('-0.0','').split('-')[1:],
+           "cantidad":tablas_enc2['cantidad'].inverse_transform([[prediccion[0][2]]])[0][0].replace('-0.0','').split('-')[1:],
+           "tipo": tablas_enc2['tipo'].inverse_transform([[prediccion[0][4]]])[0][0].replace('-0.0','').split('-')[1:],
+        }
+
+        mi_diccionario2 = {
+           "codigo_medicamento":tablas_enc2['codigo_medicamento'].inverse_transform([[prediccion2[0][0]]])[0][0].replace('-0.0','').split('-')[1:],
+           "descripcion_medicamento":tablas_enc2['descripcion_medicamento'].inverse_transform([[prediccion2[0][1]]])[0][0].replace('-0.0','').split('-')[1:],
+           "cantidad_medicamento":tablas_enc2['cantidad_medicamento'].inverse_transform([[prediccion2[0][2]]])[0][0].replace('-0.0','').split('-')[1:],
+           "prescripcion_medicamento":tablas_enc2['prescripcion_medicamento'].inverse_transform([[prediccion2[0][3]]])[0][0].replace('-0.0','').split('-')[1:],
+        }
+
+        solicitudes=[]
+        medicamentos=[]
+
+        dist=len(mi_diccionario['cups_solictud']),len(mi_diccionario['descripcion']),len(mi_diccionario['cantidad']),len(mi_diccionario['tipo'])
+        dist2=len(mi_diccionario2['codigo_medicamento']),len(mi_diccionario2['descripcion_medicamento']),len(mi_diccionario2['cantidad_medicamento']),len(mi_diccionario2['prescripcion_medicamento'])
+
+        for i in range(min(dist)):
+           cups_solicitud = mi_diccionario['cups_solictud'][i]
+           descripcion = mi_diccionario['descripcion'][i]
+           cantidad = mi_diccionario['cantidad'][i]
+           tipo = mi_diccionario['tipo'][i]
+           solicitudes.append(MiClase(cups_solicitud, descripcion,cantidad,tipo))
+
+        for j in range(min(dist2)):
+           codigo_medicamento = mi_diccionario2['codigo_medicamento'][j]
+           descripcion_medicamento = mi_diccionario2['descripcion_medicamento'][j]
+           cantidad_medicamento = mi_diccionario2['cantidad_medicamento'][j]
+           prescripcion_medicamento = mi_diccionario2['prescripcion_medicamento'][j]
+           medicamentos.append(MiClase2(codigo_medicamento, descripcion_medicamento,cantidad_medicamento,prescripcion_medicamento))
         respuesta3=0
         respuesta3={
-              "cups_codigo":tablas_enc2['cups_codigo'].inverse_transform([[prediccion[0][0]]])[0][0].replace('-0.0',''),
+              "clase_solicitudes": solicitudes,
+              "clase_medicamentos": medicamentos,
               "cups_codigo_probabilidad":max(clf11.predict_proba([dato_en])[0][0]),
-              "descripcion" :tablas_enc2['descripcion'].inverse_transform([[prediccion[0][1]]])[0][0].replace('-0.0',''),
               "descripcion_probabilidad":max(clf11.predict_proba([dato_en])[1][0]),
-              "cantidad":tablas_enc2['cantidad'].inverse_transform([[prediccion[0][2]]])[0][0].replace('-0.0',''),
               "cantidad_probabilidad":max(clf11.predict_proba([dato_en])[2][0]),
-              "prescripcion": tablas_enc2['prescripcion'].inverse_transform([[prediccion[0][3]]])[0][0][0][0].replace('-0.0',''),
-              "prescripcion_probabilidad":max(clf11.predict_proba([dato_en])[3][0]),
-              "tipo": tablas_enc2['tipo'].inverse_transform([[prediccion[0][4]]])[0][0].replace('-0.0',''),
               "tipo_probabilidad":max(clf11.predict_proba([dato_en])[4][0]),
-              "codigo_medicamento":tablas_enc2['codigo_medicamento'].inverse_transform([[prediccion2[0][0]]])[0][0].replace('-0.0',''),
               "codigo_medicamento_probabilidad":max(clf22.predict_proba(lists)[0][0]),
-              "descripcion_medicamento":tablas_enc2['descripcion_medicamento'].inverse_transform([[prediccion2[0][1]]])[0][0].replace('-0.0',''),
               "descripcion_medicamento_probabilidad":max(clf22.predict_proba(lists)[1][0]),
-              "cantidad_medicamento":tablas_enc2['cantidad_medicamento'].inverse_transform([[prediccion2[0][2]]])[0][0].replace('-0.0',''),
               "cantidad_medicamento_probabilidad":max(clf22.predict_proba(lists)[2][0]),
-              "prescripcion_medicamento":tablas_enc2['prescripcion_medicamento'].inverse_transform([[prediccion2[0][3]]])[0][0].replace('-0.0',''),
               "prescripcion_medicamento_probabilidad":max(clf22.predict_proba(lists)[3][0]),
               #"presentacion":tablas_enc['presentacion'].inverse_transform([[prediccion2[0][4]]])[0][0]
           }
